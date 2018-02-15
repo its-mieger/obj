@@ -1,4 +1,5 @@
 <?php
+	use ItsMieger\Obj\Exceptions\ObjectCastException;
 	use ItsMieger\Obj\Obj;
 
 	if (!function_exists('o_comp')) {
@@ -201,6 +202,58 @@
 		 */
 		function o_div($a, $b) {
 			return Obj::singleton()->divide($a, $b);
+		}
+	}
+
+	if (!function_exists('o_castFloat')) {
+
+		/**
+		 * Casts the value as float
+		 * @param mixed $value The value
+		 * @return float The value as float
+		 * @throws ObjectCastException
+		 */
+		function o_castFloat($value) {
+			return Obj::singleton()->castFloat($value);
+		}
+	}
+
+	if (!function_exists('o_castInt')) {
+
+		/**
+		 * Casts the value as integer
+		 * @param mixed $value The value
+		 * @return int The value as integer
+		 * @throws ObjectCastException
+		 */
+		function o_castInt($value) {
+			return Obj::singleton()->castInt($value);
+		}
+	}
+
+	if (!function_exists('o_castBool')) {
+
+		/**
+		 * Casts the value as boolean
+		 * @param mixed $value The value
+		 * @return bool The value as boolean
+		 * @throws ObjectCastException
+		 */
+		function o_castBool($value) {
+			return Obj::singleton()->castBool($value);
+		}
+	}
+
+	if (!function_exists('o_castString')) {
+
+		/**
+		 * Casts the value as string
+		 * @param mixed $value The value
+		 * @return string The value as string
+		 * @throws ObjectCastException
+		 */
+		function o_castString($value) {
+			return Obj::singleton()->castString($value);
 		}
 	}
 

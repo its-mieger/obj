@@ -13,19 +13,23 @@
 	use ItsMieger\Obj\Contracts\OperatorDivide;
 	use ItsMieger\Obj\Contracts\OperatorMultiply;
 	use ItsMieger\Obj\Contracts\OperatorSubtract;
+	use ItsMieger\Obj\Exceptions\ObjectCastException;
 	use ItsMieger\Obj\ObjectHelper;
 
 	class ObjectHelperTest extends TestCase
 	{
 		protected static $classId = 0;
 
-		protected function vectorTest(string $fn, array $vectors) {
+		protected function vectorTest(string $fn, array $vectors, $strict = false) {
 			$obj = new ObjectHelper();
 
 			foreach ($vectors as $label => $curr) {
 				$ret = array_pop($curr);
 
-				$this->assertEquals($ret, $obj->{$fn}(...$curr), 'Testing ' . $fn . ' for "' . $label . '"');
+				if (!$strict)
+					$this->assertEquals($ret, $obj->{$fn}(...$curr), 'Testing ' . $fn . ' for "' . trim($label) . '"');
+				else
+					$this->assertSame($ret, $obj->{$fn}(...$curr), 'Testing ' . $fn . ' for "' . trim($label) . '"');
 			}
 		}
 
@@ -227,7 +231,7 @@
 			return $ret;
 		}
 
-		protected function generateTestVectorsForAllValues(\Closure $resultFn) {
+		protected function generateTestBinaryVectorsForAllValues(\Closure $resultFn) {
 			$values = array_merge(
 				$this->valuesInt(),
 				$this->valuesFloat(),
@@ -252,9 +256,30 @@
 			return $vectors;
 		}
 
+		protected function generateTestVectorsForAllValues(\Closure $resultFn) {
+			$values = array_merge(
+				$this->valuesInt(),
+				$this->valuesFloat(),
+				$this->valuesBool(),
+				$this->valuesNull(),
+				$this->valuesString()
+			);
+
+			$vectors = [];
+			foreach ($values as $label => $curr) {
+
+				try {
+					$vectors[$label] = [$curr[0], $resultFn(array_key_exists(1, $curr) ? $curr[1] : $curr[0])];
+				}
+				catch (\Exception $ex) {}
+			}
+
+			return $vectors;
+		}
+
 
 		public function testCompareVectors() {
-			$this->vectorTest('compare', $this->generateTestVectorsForAllValues(function($a, $b) {
+			$this->vectorTest('compare', $this->generateTestBinaryVectorsForAllValues(function($a, $b) {
 				return $a <=> $b;
 			}));
 		}
@@ -264,7 +289,7 @@
 		}
 
 		public function testAddVectors() {
-			$this->vectorTest('add', $this->generateTestVectorsForAllValues(function($a, $b) {
+			$this->vectorTest('add', $this->generateTestBinaryVectorsForAllValues(function($a, $b) {
 				return $a + $b;
 			}));
 		}
@@ -274,7 +299,7 @@
 		}
 
 		public function testSubtractVectors() {
-			$this->vectorTest('subtract', $this->generateTestVectorsForAllValues(function($a, $b) {
+			$this->vectorTest('subtract', $this->generateTestBinaryVectorsForAllValues(function($a, $b) {
 				return $a - $b;
 			}));
 		}
@@ -284,7 +309,7 @@
 		}
 
 		public function testMultiplyVectors() {
-			$this->vectorTest('multiply', $this->generateTestVectorsForAllValues(function ($a, $b) {
+			$this->vectorTest('multiply', $this->generateTestBinaryVectorsForAllValues(function ($a, $b) {
 				return $a * $b;
 			}));
 		}
@@ -294,7 +319,7 @@
 		}
 
 		public function testDivideVectors() {
-			$this->vectorTest('divide', $this->generateTestVectorsForAllValues(function ($a, $b) {
+			$this->vectorTest('divide', $this->generateTestBinaryVectorsForAllValues(function ($a, $b) {
 
 				// exclude vector
 				if ($b == 0)
@@ -308,5 +333,61 @@
 			$this->callPrecedenceTest('divide', OperatorDivide::class, '_operator_divide', 'int');
 		}
 
+		public function testCastFloat() {
+			$this->vectorTest('castFloat', $this->generateTestVectorsForAllValues(function ($value) {
+				return (float)$value;
+			}), true);
+		}
+
+		public function testCastFloatException() {
+			$obj = new ObjectHelper();
+
+			$this->expectException(ObjectCastException::class);
+
+			$obj->castFloat(new \stdClass());
+		}
+
+		public function testCastInt() {
+			$this->vectorTest('castInt', $this->generateTestVectorsForAllValues(function ($value) {
+				return (int)$value;
+			}), true);
+		}
+
+		public function testCastIntException() {
+			$obj = new ObjectHelper();
+
+			$this->expectException(ObjectCastException::class);
+
+			$obj->castInt(new \stdClass());
+		}
+
+		public function testCastBoolean() {
+			$this->vectorTest('castBool', $this->generateTestVectorsForAllValues(function ($value) {
+				return (bool)$value;
+			}), true);
+		}
+
+		public function testCastBooleanException() {
+			$obj = new ObjectHelper();
+
+			$this->expectException(ObjectCastException::class);
+
+			$obj->castBool(new \stdClass());
+		}
+
+
+		public function testCastString() {
+			$this->vectorTest('castString', $this->generateTestVectorsForAllValues(function ($value) {
+				return (string)$value;
+			}), true);
+		}
+
+		public function testCastStringException() {
+			$obj = new ObjectHelper();
+
+			$this->expectException(ObjectCastException::class);
+
+			$obj->castString(new \stdClass());
+		}
 
 	}

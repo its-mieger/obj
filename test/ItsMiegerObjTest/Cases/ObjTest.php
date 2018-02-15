@@ -61,6 +61,10 @@
 			$this->assertTrue(function_exists('o_sub'));
 			$this->assertTrue(function_exists('o_mul'));
 			$this->assertTrue(function_exists('o_div'));
+			$this->assertTrue(function_exists('o_castFloat'));
+			$this->assertTrue(function_exists('o_castInt'));
+			$this->assertTrue(function_exists('o_castBool'));
+			$this->assertTrue(function_exists('o_castString'));
 		}
 
 		public function testDuplicateHelperLoad() {

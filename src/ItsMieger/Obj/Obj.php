@@ -22,6 +22,10 @@
 	 * @method bool isInt($value) static Checks if a value is an integer or casts as integer
 	 * @method bool isFloat($value) static Checks if a value is a float or casts as float
 	 * @method bool isBool($value) static Checks if a value is a boolean or casts as boolean
+	 * @method float castFloat($value) static Casts the value as float
+	 * @method int castInt($value) static Casts the value as integer
+	 * @method bool castBool($value) static Casts the value as boolean
+	 * @method string castString($value) static Casts the value as string
 	 * @package ItsMieger\Obj
 	 */
 	class Obj

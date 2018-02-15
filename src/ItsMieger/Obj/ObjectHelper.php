@@ -14,6 +14,7 @@
 	use ItsMieger\Obj\Contracts\OperatorDivide;
 	use ItsMieger\Obj\Contracts\OperatorMultiply;
 	use ItsMieger\Obj\Contracts\OperatorSubtract;
+	use ItsMieger\Obj\Exceptions\ObjectCastException;
 
 	/**
 	 * Implements object helper functions
@@ -136,7 +137,7 @@
 					if (!is_object($value))
 						return (string)$value;
 					elseif ($value instanceof Nullable && $value->isNull())
-						return null;
+						return (string)null;
 					elseif ($value instanceof CastsAsString)
 						return $value->toString();
 					elseif ($value instanceof CastsAsFloat)
@@ -170,6 +171,82 @@
 
 			$a = $this->tryCastNative($a, $targetType);
 			$b = $this->tryCastNative($b, $targetType);
+		}
+
+		/**
+		 * Gets the type name (class name or type) of the passed object
+		 * @param mixed $obj The object
+		 * @return string The type name
+		 */
+		protected function getTypeName($obj) {
+			$type = gettype($obj);
+
+			switch($type) {
+				case 'object':
+					return get_class($obj);
+				default:
+					return $type;
+			}
+		}
+
+		/**
+		 * Casts the value as float
+		 * @param mixed $value The value
+		 * @return float The value as float
+		 * @throws ObjectCastException
+		 */
+		public function castFloat($value) : float {
+			$ret = $this->tryCastNative($value, 'float');
+
+			if (!is_float($ret))
+				throw new ObjectCastException($this->getTypeName($value), 'float');
+
+			return $ret;
+		}
+
+		/**
+		 * Casts the value as integer
+		 * @param mixed $value The value
+		 * @return int The value as integer
+		 * @throws ObjectCastException
+		 */
+		public function castInt($value) : int {
+			$ret = $this->tryCastNative($value, 'int');
+
+			if (!is_int($ret))
+				throw new ObjectCastException($this->getTypeName($value), 'int');
+
+			return $ret;
+		}
+
+		/**
+		 * Casts the value as boolean
+		 * @param mixed $value The value
+		 * @return bool The value as boolean
+		 * @throws ObjectCastException
+		 */
+		public function castBool($value) : bool {
+			$ret = $this->tryCastNative($value, 'bool');
+
+			if (!is_bool($ret))
+				throw new ObjectCastException($this->getTypeName($value), 'bool');
+
+			return $ret;
+		}
+
+		/**
+		 * Casts the value as string
+		 * @param mixed $value The value
+		 * @return string The value as string
+		 * @throws ObjectCastException
+		 */
+		public function castString($value) : string {
+			$ret = $this->tryCastNative($value, 'string');
+
+			if (!is_string($ret))
+				throw new ObjectCastException($this->getTypeName($value), 'string');
+
+			return $ret;
 		}
 
 		/**

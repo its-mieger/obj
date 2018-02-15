@@ -248,4 +248,64 @@
 
 			$this->assertEquals(7, o_div(3, 5));
 		}
+
+		public function testOCastFloat() {
+			Obj::loadHelpers();
+
+			$mock = $this->getMockBuilder(ObjectHelper::class)->getMock();
+			$mock
+				->expects($this->once())
+				->method('castFloat')
+				->with(3)
+				->willReturn(7);
+
+			Obj::mock($mock);
+
+			$this->assertEquals(7, o_castFloat(3));
+		}
+
+		public function testOCastInt() {
+			Obj::loadHelpers();
+
+			$mock = $this->getMockBuilder(ObjectHelper::class)->getMock();
+			$mock
+				->expects($this->once())
+				->method('castInt')
+				->with(3)
+				->willReturn(7);
+
+			Obj::mock($mock);
+
+			$this->assertEquals(7, o_castInt(3));
+		}
+
+		public function testOCastBool() {
+			Obj::loadHelpers();
+
+			$mock = $this->getMockBuilder(ObjectHelper::class)->getMock();
+			$mock
+				->expects($this->once())
+				->method('castBool')
+				->with(3)
+				->willReturn(7);
+
+			Obj::mock($mock);
+
+			$this->assertEquals(7, o_castBool(3));
+		}
+
+		public function testOCastString() {
+			Obj::loadHelpers();
+
+			$mock = $this->getMockBuilder(ObjectHelper::class)->getMock();
+			$mock
+				->expects($this->once())
+				->method('castString')
+				->with(3)
+				->willReturn(7);
+
+			Obj::mock($mock);
+
+			$this->assertEquals(7, o_castString(3));
+		}
 	}

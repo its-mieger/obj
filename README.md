@@ -27,7 +27,7 @@ objects behave as implemented by the specified interfaces. However helper functi
 autoloaded but may be imported by calling `Obj::loadHelpers()`. If not loaded, the helpers
 may be called using the static methods of the `Obj`-class
 
-| Native operator | Helper function | Call without helper function |
+| Native | Helper function | Call without helper function |
 | ----------------| --------------- | ----------------------------- |
 | `==`				| `o_eq`		| `Obj::equal(...)`			|
 | `!=`				| `o_ne`		| `Obj::notEqual(...)`			|
@@ -40,6 +40,14 @@ may be called using the static methods of the `Obj`-class
 | `-`				| `o_sub`		| `Obj::subtract(...)`			|
 | `*`				| `o_mul`		| `Obj::multiply(...)`			|
 | `/`				| `o_div`		| `Obj::divide(...)`			|
+| `isFloat()`  		| `o_isFloat`	| `Obj::isFloat(...)`			|
+| `isInt()`  		| `o_isInt`		| `Obj::isInt(...)`			|
+| `isBool()`  		| `o_isBool`		| `Obj::isBool(...)`			|
+| `isString()`  	| `o_isString`		| `Obj::isString(...)`			|
+| `(float)`    		| `o_castFloat`		| `Obj::castFloat(...)`			|
+| `(int)`    		| `o_castInt`		| `Obj::castInt(...)`			|
+| `(bool)`    		| `o_castBool`		| `Obj::castBool(...)`			|
+| `(string)`   		| `o_castString`	| `Obj::castString(...)`			|
 
 ## Behavior
 Using one of the object helper functions, objects behave like native data types would do for the

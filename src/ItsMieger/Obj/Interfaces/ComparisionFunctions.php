@@ -5,7 +5,7 @@
 
 	use ItsMieger\Obj\Contracts\Comparable;
 
-	interface Comparision extends Comparable
+	interface ComparisionFunctions extends Comparable
 	{
 		/**
 		 * Checks if the object equals the specified value

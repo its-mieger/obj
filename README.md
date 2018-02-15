@@ -84,7 +84,8 @@ Sometimes it is not obvious which operator function is called. Especially if hav
 same operator. The behavior described below concerns the `Operator`*-interfaces as well as the `Comparable`-interface
 which overrides all comparision operators with one function:
 
-* If both implement the operator interface, the operator function is invoked for the descended object if the objects are descendants.
+* If both implement the operator interface, the operator function is invoked for the descended object if the objects are descendants
+and the operation is commutative.
 If objects are not descendants, the operator function is invoked for the left side object.
 
 * If only one implements the Operator interface, the operator function is invoked for the corresponding object.

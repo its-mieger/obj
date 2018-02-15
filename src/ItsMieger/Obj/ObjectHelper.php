@@ -29,15 +29,17 @@
 		 * @param string $interface The interface implementing the operation
 		 * @param string $fn The function to invoke
 		 * @param mixed $result The result returned by the operation
+		 * @param bool $commutative True if commutative operation
 		 * @return bool True if could be invoked. Else false.
 		 */
-		protected function invokeBinaryOperation($a, $b, string $interface, string $fn, &$result) {
+		protected function invokeBinaryOperation($a, $b, string $interface, string $fn, &$result, $commutative = true) {
 			$aHasAbility = is_object($a) && ($a instanceof $interface);
 			$bHasAbility = is_object($b) && ($b instanceof $interface);
 
 			if ($aHasAbility && $bHasAbility) {
+				$classNameA = get_class($a);
 				$classNameB = get_class($b);
-				if ($a instanceof $classNameB)
+				if (!$commutative || $a instanceof $classNameB || !($b instanceof $classNameA))
 					$result = $a->{$fn}($b);
 				else
 					$result = $b->{$fn}($a);
@@ -49,7 +51,7 @@
 
 				return true;
 			}
-			elseif ($bHasAbility) {
+			elseif ($bHasAbility && $commutative) {
 				$result = $b->{$fn}($a);
 
 				return true;
@@ -349,7 +351,7 @@
 		 */
 		public function subtract($a, $b) {
 			$result = null;
-			if (!$this->invokeBinaryOperation($a, $b, OperatorSubtract::class, '_operator_subtract', $result)) {
+			if (!$this->invokeBinaryOperation($a, $b, OperatorSubtract::class, '_operator_subtract', $result, false)) {
 				$this->asNativeOperands($a, $b);
 				$result = $a - $b;
 			}
@@ -381,7 +383,7 @@
 		 */
 		public function divide($a, $b) {
 			$result = null;
-			if (!$this->invokeBinaryOperation($a, $b, OperatorDivide::class, '_operator_divide', $result)) {
+			if (!$this->invokeBinaryOperation($a, $b, OperatorDivide::class, '_operator_divide', $result, false)) {
 				$this->asNativeOperands($a, $b);
 				$result = $a / $b;
 			}

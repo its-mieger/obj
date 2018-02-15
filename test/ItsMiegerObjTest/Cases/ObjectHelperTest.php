@@ -33,29 +33,34 @@
 			}
 		}
 
-		protected function callPrecedenceTest(string $fn, string $interface, string $interfaceMethod, $returnType) {
+		protected function callPrecedenceTestCommutative(string $fn, string $interface, string $interfaceMethod, $returnType) {
 			$obj = new ObjectHelper();
 
 			++self::$classId;
 
-			eval("class CallPrecedenceTestClass_" . self::$classId . " implements " . $interface . " { public function " . $interfaceMethod . "(\$a) : $returnType { throw new Exception('Child class should be called instead of Parent class (" . $fn .")'); } }");
+			eval("class CallPrecedenceTestClass_" . self::$classId . " implements " . $interface . " { public function " . $interfaceMethod . "(\$a) : $returnType { throw new Exception('Method should not be called for this instance (" . $fn .")'); } }");
+			$cls = "CallPrecedenceTestClass_" . self::$classId;
 
 
 			// both implement - a inherits b => a should be called
-			$cls = "CallPrecedenceTestClass_" . self::$classId;
 			$b = new $cls();
-			$a = $this->getMockBuilder("CallPrecedenceTestClass_" . self::$classId)->getMock();
+			$a = $this->getMockBuilder($cls)->getMock();
 			$a->expects($this->once())->method($interfaceMethod)->with($b);
 			$obj->{$fn}($a, $b);
 
-			// both implement - a inherits b => a should be called
-			$cls = "CallPrecedenceTestClass_" . self::$classId;
+			// both implement - b inherits a => b should be called
 			$a = new $cls();
-			$b = $this->getMockBuilder("CallPrecedenceTestClass_" . self::$classId)->getMock();
+			$b = $this->getMockBuilder($cls)->getMock();
 			$b->expects($this->once())->method($interfaceMethod)->with($a);
 			$obj->{$fn}($a, $b);
 
 			// both implement - not inherited => a should be called
+			$b = new $cls();
+			$a = $this->getMockBuilder($interface)->getMock();
+			$a->expects($this->once())->method($interfaceMethod)->with($b);
+			$obj->{$fn}($a, $b);
+
+			// both implement - same type => a should be called
 			$b = $this->getMockBuilder($interface)->getMock();
 			$b->expects($this->never())->method($interfaceMethod);
 			$a = $this->getMockBuilder($interface)->getMock();
@@ -73,6 +78,60 @@
 			$b = $this->getMockBuilder($interface)->getMock();
 			$b->expects($this->once())->method($interfaceMethod)->with($a);
 			$obj->{$fn}($a, $b);
+
+			// none implements, none should be called
+			$obj->{$fn}(1, 1);
+
+		}
+
+		protected function callPrecedenceTestNonCommutative(string $fn, string $interface, string $interfaceMethod, $returnType) {
+			$obj = new ObjectHelper();
+
+			++self::$classId;
+
+			// create helper classes for inheritance tests on the fly
+			eval("class CallPrecedenceTestClass_FailOnCall_" . self::$classId . " implements " . $interface . ", " . CastsAsInteger::class . " { public function " . $interfaceMethod . "(\$a) : $returnType { throw new Exception('Method should not be called for this instance (" . $fn .")'); } public function toInt() : int { return 1; } }");
+			eval("class CallPrecedenceTestClass_AcceptCall_" . self::$classId . " implements " . $interface . " { public function " . $interfaceMethod . "(\$a) : $returnType { return ($returnType)1; } }");
+			$cllShouldNotBeCalled = "CallPrecedenceTestClass_FailOnCall_" . self::$classId;
+			$cllShouldBeCalled = "CallPrecedenceTestClass_AcceptCall_" . self::$classId;
+
+
+			// both implement - a inherits b => a should be called
+			$b = new $cllShouldNotBeCalled();
+			$a = $this->getMockBuilder($cllShouldNotBeCalled)->getMock();
+			$a->expects($this->once())->method($interfaceMethod)->with($b);
+			$obj->{$fn}($a, $b);
+
+			// both implement - b inherits a => a should be called
+			$a = new $cllShouldBeCalled();
+			$b = $this->getMockBuilder($cllShouldNotBeCalled)->getMock();
+			$b->expects($this->never())->method($interfaceMethod)->with($a);
+			$obj->{$fn}($a, $b);
+
+			// both implement - not inherited => a should be called
+			$b = new $cllShouldNotBeCalled();
+			$a = $this->getMockBuilder($interface)->getMock();
+			$a->expects($this->once())->method($interfaceMethod)->with($b);
+			$obj->{$fn}($a, $b);
+
+			// both implement - same type => a should be called
+			$b = $this->getMockBuilder($interface)->getMock();
+			$b->expects($this->never())->method($interfaceMethod);
+			$a = $this->getMockBuilder($interface)->getMock();
+			$a->expects($this->once())->method($interfaceMethod)->with($b);
+			$obj->{$fn}($a, $b);
+
+			// only a implements => a should be called
+			$b = 1;
+			$a = $this->getMockBuilder($interface)->getMock();
+			$a->expects($this->once())->method($interfaceMethod)->with($b);
+			$obj->{$fn}($a, $b);
+
+			// only b implements => none should be called
+			$a = 1;
+			$b = new $cllShouldNotBeCalled();
+			$obj->{$fn}($a, $b);
+
 
 			// none implements, none should be called
 			$obj->{$fn}(1, 1);
@@ -285,7 +344,7 @@
 		}
 
 		public function testComparePrecedence() {
-			$this->callPrecedenceTest('compare', Comparable::class, 'compareTo', 'int');
+			$this->callPrecedenceTestCommutative('compare', Comparable::class, 'compareTo', 'int');
 		}
 
 		public function testAddVectors() {
@@ -295,7 +354,7 @@
 		}
 
 		public function testAddPrecedence() {
-			$this->callPrecedenceTest('add', OperatorAdd::class, '_operator_add', 'int');
+			$this->callPrecedenceTestCommutative('add', OperatorAdd::class, '_operator_add', 'int');
 		}
 
 		public function testSubtractVectors() {
@@ -305,7 +364,7 @@
 		}
 
 		public function testSubtractPrecedence() {
-			$this->callPrecedenceTest('subtract', OperatorSubtract::class, '_operator_subtract', 'int');
+			$this->callPrecedenceTestNonCommutative('subtract', OperatorSubtract::class, '_operator_subtract', 'int');
 		}
 
 		public function testMultiplyVectors() {
@@ -315,7 +374,7 @@
 		}
 
 		public function testMultiplyPrecedence() {
-			$this->callPrecedenceTest('multiply', OperatorMultiply::class, '_operator_multiply', 'int');
+			$this->callPrecedenceTestCommutative('multiply', OperatorMultiply::class, '_operator_multiply', 'int');
 		}
 
 		public function testDivideVectors() {
@@ -330,7 +389,7 @@
 		}
 
 		public function testDividePrecedence() {
-			$this->callPrecedenceTest('divide', OperatorDivide::class, '_operator_divide', 'int');
+			$this->callPrecedenceTestNonCommutative('divide', OperatorDivide::class, '_operator_divide', 'int');
 		}
 
 		public function testCastFloat() {

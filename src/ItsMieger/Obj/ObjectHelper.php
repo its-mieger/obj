@@ -30,19 +30,25 @@
 		 * @param string $fn The function to invoke
 		 * @param mixed $result The result returned by the operation
 		 * @param bool $commutative True if commutative operation
+		 * @param int|null $commutativeCorrectFactor The correction factor for commutative operations if operands are switched
 		 * @return bool True if could be invoked. Else false.
 		 */
-		protected function invokeBinaryOperation($a, $b, string $interface, string $fn, &$result, $commutative = true) {
+		protected function invokeBinaryOperation($a, $b, string $interface, string $fn, &$result, $commutative = true, $commutativeCorrectFactor = null) {
 			$aHasAbility = is_object($a) && ($a instanceof $interface);
 			$bHasAbility = is_object($b) && ($b instanceof $interface);
 
 			if ($aHasAbility && $bHasAbility) {
 				$classNameA = get_class($a);
 				$classNameB = get_class($b);
-				if (!$commutative || $a instanceof $classNameB || !($b instanceof $classNameA))
+				if (!$commutative || $a instanceof $classNameB || !($b instanceof $classNameA)) {
 					$result = $a->{$fn}($b);
-				else
+				}
+				else {
 					$result = $b->{$fn}($a);
+
+					if ($commutativeCorrectFactor)
+						$result *= $commutativeCorrectFactor;
+				}
 
 				return true;
 			}
@@ -53,6 +59,9 @@
 			}
 			elseif ($bHasAbility && $commutative) {
 				$result = $b->{$fn}($a);
+
+				if ($commutativeCorrectFactor)
+					$result *= $commutativeCorrectFactor;
 
 				return true;
 			}
@@ -316,7 +325,7 @@
 		public function compare($a, $b): int {
 
 			$result = null;
-			if (!$this->invokeBinaryOperation($a, $b, Comparable::class, 'compareTo', $result)) {
+			if (!$this->invokeBinaryOperation($a, $b, Comparable::class, 'compareTo', $result, true, -1)) {
 
 				$this->asNativeOperands($a, $b, ['null', 'bool', 'float', 'int', 'string']);
 

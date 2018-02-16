@@ -85,7 +85,7 @@ same operator. The behavior described below concerns the `Operator`*-interfaces 
 which overrides all comparision operators with one function:
 
 * If both implement the operator interface, the operator function is invoked for the descended object if the objects are descendants
-and the operation is commutative.
+and the operation is commutative (the compare operation is also treated as commutative).
 If objects are not descendants, the operator function is invoked for the left side object.
 
 * If only one implements the Operator interface, the operator function is invoked for the corresponding object.

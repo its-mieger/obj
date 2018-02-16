@@ -33,7 +33,7 @@
 			}
 		}
 
-		protected function callPrecedenceTestCommutative(string $fn, string $interface, string $interfaceMethod, $returnType) {
+		protected function callPrecedenceTestCommutative(string $fn, string $interface, string $interfaceMethod, $returnType, $commCorrectFactor = 1) {
 			$obj = new ObjectHelper();
 
 			++self::$classId;
@@ -45,44 +45,45 @@
 			// both implement - a inherits b => a should be called
 			$b = new $cls();
 			$a = $this->getMockBuilder($cls)->getMock();
-			$a->expects($this->once())->method($interfaceMethod)->with($b);
-			$obj->{$fn}($a, $b);
+			$a->expects($this->once())->method($interfaceMethod)->with($b)->willReturn(1);
+			$this->assertEquals(1, $obj->{$fn}($a, $b));
 
 			// both implement - b inherits a => b should be called
 			$a = new $cls();
 			$b = $this->getMockBuilder($cls)->getMock();
-			$b->expects($this->once())->method($interfaceMethod)->with($a);
-			$obj->{$fn}($a, $b);
+			$b->expects($this->once())->method($interfaceMethod)->with($a)->willReturn(1);
+			$this->assertEquals(1 * $commCorrectFactor, $obj->{$fn}($a, $b));
 
 			// both implement - not inherited => a should be called
 			$b = new $cls();
 			$a = $this->getMockBuilder($interface)->getMock();
-			$a->expects($this->once())->method($interfaceMethod)->with($b);
-			$obj->{$fn}($a, $b);
+			$a->expects($this->once())->method($interfaceMethod)->with($b)->willReturn(1);
+			$this->assertEquals(1, $obj->{$fn}($a, $b));
 
 			// both implement - same type => a should be called
 			$b = $this->getMockBuilder($interface)->getMock();
 			$b->expects($this->never())->method($interfaceMethod);
 			$a = $this->getMockBuilder($interface)->getMock();
-			$a->expects($this->once())->method($interfaceMethod)->with($b);
-			$obj->{$fn}($a, $b);
+			$a->expects($this->once())->method($interfaceMethod)->with($b)->willReturn(1);
+			$this->assertEquals(1, $obj->{$fn}($a, $b));
 
 			// only a implements => a should be called
 			$b = new \stdClass();
 			$a = $this->getMockBuilder($interface)->getMock();
-			$a->expects($this->once())->method($interfaceMethod)->with($b);
-			$obj->{$fn}($a, $b);
+			$a->expects($this->once())->method($interfaceMethod)->with($b)->willReturn(1);
+			$this->assertEquals(1, $obj->{$fn}($a, $b));
 
 			// only b implements => b should be called
 			$a = new \stdClass();
 			$b = $this->getMockBuilder($interface)->getMock();
-			$b->expects($this->once())->method($interfaceMethod)->with($a);
-			$obj->{$fn}($a, $b);
+			$b->expects($this->once())->method($interfaceMethod)->with($a)->willReturn(1);
+			$this->assertEquals(1 * $commCorrectFactor, $obj->{$fn}($a, $b));
 
 			// none implements, none should be called
 			$obj->{$fn}(1, 1);
 
 		}
+
 
 		protected function callPrecedenceTestNonCommutative(string $fn, string $interface, string $interfaceMethod, $returnType) {
 			$obj = new ObjectHelper();
@@ -99,33 +100,33 @@
 			// both implement - a inherits b => a should be called
 			$b = new $cllShouldNotBeCalled();
 			$a = $this->getMockBuilder($cllShouldNotBeCalled)->getMock();
-			$a->expects($this->once())->method($interfaceMethod)->with($b);
-			$obj->{$fn}($a, $b);
+			$a->expects($this->once())->method($interfaceMethod)->with($b)->willReturn(1);
+			$this->assertEquals(1, $obj->{$fn}($a, $b));
 
 			// both implement - b inherits a => a should be called
 			$a = new $cllShouldBeCalled();
 			$b = $this->getMockBuilder($cllShouldNotBeCalled)->getMock();
-			$b->expects($this->never())->method($interfaceMethod)->with($a);
-			$obj->{$fn}($a, $b);
+			$b->expects($this->never())->method($interfaceMethod)->with($a)->willReturn(1);
+			$this->assertEquals(1, $obj->{$fn}($a, $b));
 
 			// both implement - not inherited => a should be called
 			$b = new $cllShouldNotBeCalled();
 			$a = $this->getMockBuilder($interface)->getMock();
-			$a->expects($this->once())->method($interfaceMethod)->with($b);
-			$obj->{$fn}($a, $b);
+			$a->expects($this->once())->method($interfaceMethod)->with($b)->willReturn(1);
+			$this->assertEquals(1, $obj->{$fn}($a, $b));
 
 			// both implement - same type => a should be called
 			$b = $this->getMockBuilder($interface)->getMock();
 			$b->expects($this->never())->method($interfaceMethod);
 			$a = $this->getMockBuilder($interface)->getMock();
-			$a->expects($this->once())->method($interfaceMethod)->with($b);
-			$obj->{$fn}($a, $b);
+			$a->expects($this->once())->method($interfaceMethod)->with($b)->willReturn(1);
+			$this->assertEquals(1, $obj->{$fn}($a, $b));
 
 			// only a implements => a should be called
 			$b = 1;
 			$a = $this->getMockBuilder($interface)->getMock();
-			$a->expects($this->once())->method($interfaceMethod)->with($b);
-			$obj->{$fn}($a, $b);
+			$a->expects($this->once())->method($interfaceMethod)->with($b)->willReturn(1);
+			$this->assertEquals(1, $obj->{$fn}($a, $b));
 
 			// only b implements => none should be called
 			$a = 1;
@@ -344,7 +345,7 @@
 		}
 
 		public function testComparePrecedence() {
-			$this->callPrecedenceTestCommutative('compare', Comparable::class, 'compareTo', 'int');
+			$this->callPrecedenceTestCommutative('compare', Comparable::class, 'compareTo', 'int', -1);
 		}
 
 		public function testAddVectors() {

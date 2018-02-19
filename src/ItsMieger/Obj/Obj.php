@@ -26,6 +26,7 @@
 	 * @method int castInt($value) static Casts the value as integer
 	 * @method bool castBool($value) static Casts the value as boolean
 	 * @method string castString($value) static Casts the value as string
+	 * @method int comparePipe(...$comparisons) static Executes multiples comparisons in a pipeline. The pipeline exits immediately if a step does not return 0. This function helps to check multiple criteria.
 	 * @package ItsMieger\Obj
 	 */
 	class Obj

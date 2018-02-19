@@ -65,6 +65,7 @@
 			$this->assertTrue(function_exists('o_castInt'));
 			$this->assertTrue(function_exists('o_castBool'));
 			$this->assertTrue(function_exists('o_castString'));
+			$this->assertTrue(function_exists('o_comparePipe'));
 		}
 
 		public function testDuplicateHelperLoad() {

@@ -257,3 +257,15 @@
 		}
 	}
 
+	if (!function_exists('o_comparePipe')) {
+
+		/**
+		 * Executes multiples comparisons in a pipeline. The pipeline exits immediately if a step does not return 0. This function helps to check multiple criteria.
+		 * @param array[]|\Closure[]|int[] ...$comparisons A step may be an integer representing a comparision result, a closure to call for a comparision result or an array of two values to be compared.
+		 * @return int The comparision result.
+		 */
+		function o_comparePipe(...$comparisons) {
+			return Obj::singleton()->comparePipe(...$comparisons);
+		}
+	}
+

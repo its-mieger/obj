@@ -450,4 +450,13 @@
 			$obj->castString(new \stdClass());
 		}
 
+		public function testComparePipe() {
+			$obj = new ObjectHelper();
+
+			$this->assertEquals(-2, $obj->comparePipe(0, -2, 1));
+			$this->assertEquals(-1, $obj->comparePipe(0, [-1, 1], 1));
+			$this->assertEquals(1, $obj->comparePipe(0, function() { return 0; }, 1));
+			$this->assertEquals(3, $obj->comparePipe(0, function() { return 3; }, 1));
+			$this->assertEquals(3, $obj->comparePipe(0, function() { return 3; }, function() { throw new \Exception('This closure should not be evaluated'); }));
+		}
 	}

@@ -48,6 +48,7 @@ may be called using the static methods of the `Obj`-class
 | `(int)`    		| `o_castInt`		| `Obj::castInt(...)`			|
 | `(bool)`    		| `o_castBool`		| `Obj::castBool(...)`			|
 | `(string)`   		| `o_castString`	| `Obj::castString(...)`			|
+|    		| `o_comparePipe`	| `Obj::comparePipe(...)`			|
 
 ## Behavior
 Using one of the object helper functions, objects behave like native data types would do for the

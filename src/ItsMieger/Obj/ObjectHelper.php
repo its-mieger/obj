@@ -459,4 +459,26 @@
 		public function lessThanOrEqual($a, $b): bool {
 			return $this->compare($a, $b) <= 0;
 		}
+
+		/**
+		 * Executes multiples comparisons in a pipeline. The pipeline exits immediately if a step does not return 0. This function helps to check multiple criteria.
+		 * @param array[]|\Closure[]|int[] ...$comparisons A step may be an integer representing a comparision result, a closure to call for a comparision result or an array of two values to be compared.
+		 * @return int The comparision result.
+		 */
+		public function comparePipe(...$comparisons) {
+			$curr = 0;
+
+			foreach($comparisons as $curr) {
+				if (is_array($curr))
+					$curr = $this->compare(...$curr);
+				elseif ($curr instanceof \Closure)
+					$curr = $curr();
+
+				$curr = (int)$curr;
+				if ($curr != 0)
+					return $curr;
+			}
+
+			return $curr;
+		}
 	}

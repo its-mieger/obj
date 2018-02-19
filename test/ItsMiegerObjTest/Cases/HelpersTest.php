@@ -308,4 +308,19 @@
 
 			$this->assertEquals(7, o_castString(3));
 		}
+
+		public function testOComparePipe() {
+			Obj::loadHelpers();
+
+			$mock = $this->getMockBuilder(ObjectHelper::class)->getMock();
+			$mock
+				->expects($this->once())
+				->method('comparePipe')
+				->with(3, 7, 8)
+				->willReturn(7);
+
+			Obj::mock($mock);
+
+			$this->assertEquals(7, o_comparePipe(3, 7,8));
+		}
 	}

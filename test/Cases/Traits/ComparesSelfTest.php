@@ -19,11 +19,11 @@
 				->expects($this->once())
 				->method('equal')
 				->with($mock, 5)
-				->willReturn(7);
+				->willReturn(true);
 
 			Obj::mock($objMock);
 
-			$this->assertEquals(7, $mock->equals(5));
+			$this->assertEquals(true, $mock->equals(5));
 		}
 
 		public function testNotEquals() {
@@ -35,11 +35,11 @@
 				->expects($this->once())
 				->method('notEqual')
 				->with($mock, 5)
-				->willReturn(7);
+				->willReturn(true);
 
 			Obj::mock($objMock);
 
-			$this->assertEquals(7, $mock->notEquals(5));
+			$this->assertEquals(true, $mock->notEquals(5));
 		}
 
 		public function testIsLessThan() {
@@ -51,11 +51,11 @@
 				->expects($this->once())
 				->method('lessThan')
 				->with($mock, 5)
-				->willReturn(7);
+				->willReturn(true);
 
 			Obj::mock($objMock);
 
-			$this->assertEquals(7, $mock->isLessThan(5));
+			$this->assertEquals(true, $mock->isLessThan(5));
 		}
 
 		public function testIsLessThanOrEqual() {
@@ -67,11 +67,11 @@
 				->expects($this->once())
 				->method('lessThanOrEqual')
 				->with($mock, 5)
-				->willReturn(7);
+				->willReturn(true);
 
 			Obj::mock($objMock);
 
-			$this->assertEquals(7, $mock->isLessThanOrEqual(5));
+			$this->assertEquals(true, $mock->isLessThanOrEqual(5));
 		}
 
 		public function testIsGreaterThan() {
@@ -83,11 +83,11 @@
 				->expects($this->once())
 				->method('greaterThan')
 				->with($mock, 5)
-				->willReturn(7);
+				->willReturn(true);
 
 			Obj::mock($objMock);
 
-			$this->assertEquals(7, $mock->isGreaterThan(5));
+			$this->assertEquals(true, $mock->isGreaterThan(5));
 		}
 
 		public function testIsGreaterThanOrEqual() {
@@ -99,10 +99,10 @@
 				->expects($this->once())
 				->method('greaterThanOrEqual')
 				->with($mock, 5)
-				->willReturn(7);
+				->willReturn(true);
 
 			Obj::mock($objMock);
 
-			$this->assertEquals(7, $mock->isGreaterThanOrEqual(5));
+			$this->assertEquals(true, $mock->isGreaterThanOrEqual(5));
 		}
 	}

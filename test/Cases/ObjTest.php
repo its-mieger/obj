@@ -70,15 +70,19 @@
 
 		public function testDuplicateHelperLoad() {
 
+			$this->expectNotToPerformAssertions();
+
 			Obj::loadHelpers();
 			Obj::loadHelpers();
 		}
 
 		public function testDuplicateHelperImport() {
 
+			$this->expectNotToPerformAssertions();
+
 			// this should fail if a function is defined twice
-			include __DIR__ . '/../../../src/ItsMieger/Obj/helpers.php';
-			include __DIR__ . '/../../../src/ItsMieger/Obj/helpers.php';
+			include __DIR__ . '/../../src/helpers.php';
+			include __DIR__ . '/../../src/helpers.php';
 		}
 
 	}

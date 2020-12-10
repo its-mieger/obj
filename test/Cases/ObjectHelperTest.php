@@ -296,8 +296,7 @@
 				$this->valuesInt(),
 				$this->valuesFloat(),
 				$this->valuesBool(),
-				$this->valuesNull(),
-				$this->valuesString()
+				$this->valuesNull()
 			);
 
 			$joined  = $this->cartesian($values, $values);

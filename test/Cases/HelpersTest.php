@@ -31,11 +31,11 @@
 				->expects($this->once())
 				->method('equal')
 				->with(3, 5)
-				->willReturn(7);
+				->willReturn(true);
 
 			Obj::mock($mock);
 
-			$this->assertEquals(7, o_eq(3, 5));
+			$this->assertEquals(true, o_eq(3, 5));
 		}
 
 		public function testONotEqual() {
@@ -46,11 +46,11 @@
 				->expects($this->once())
 				->method('notEqual')
 				->with(3, 5)
-				->willReturn(7);
+				->willReturn(true);
 
 			Obj::mock($mock);
 
-			$this->assertEquals(7, o_ne(3, 5));
+			$this->assertEquals(true, o_ne(3, 5));
 		}
 
 		public function testOLessThan() {
@@ -61,11 +61,11 @@
 				->expects($this->once())
 				->method('lessThan')
 				->with(3, 5)
-				->willReturn(7);
+				->willReturn(true);
 
 			Obj::mock($mock);
 
-			$this->assertEquals(7, o_lt(3, 5));
+			$this->assertEquals(true, o_lt(3, 5));
 		}
 
 		public function testOLessThanOrEqual() {
@@ -76,11 +76,11 @@
 				->expects($this->once())
 				->method('lessThanOrEqual')
 				->with(3, 5)
-				->willReturn(7);
+				->willReturn(true);
 
 			Obj::mock($mock);
 
-			$this->assertEquals(7, o_le(3, 5));
+			$this->assertEquals(true, o_le(3, 5));
 		}
 
 		public function testOGreaterThan() {
@@ -91,11 +91,11 @@
 				->expects($this->once())
 				->method('greaterThan')
 				->with(3, 5)
-				->willReturn(7);
+				->willReturn(true);
 
 			Obj::mock($mock);
 
-			$this->assertEquals(7, o_gt(3, 5));
+			$this->assertEquals(true, o_gt(3, 5));
 		}
 
 		public function testOGreaterThanOrEqual() {
@@ -106,11 +106,11 @@
 				->expects($this->once())
 				->method('greaterThanOrEqual')
 				->with(3, 5)
-				->willReturn(7);
+				->willReturn(true);
 
 			Obj::mock($mock);
 
-			$this->assertEquals(7, o_ge(3, 5));
+			$this->assertEquals(true, o_ge(3, 5));
 		}
 
 		public function testOIsNull() {
@@ -121,11 +121,11 @@
 				->expects($this->once())
 				->method('isNull')
 				->with(3)
-				->willReturn(7);
+				->willReturn(true);
 
 			Obj::mock($mock);
 
-			$this->assertEquals(7, o_isNull(3));
+			$this->assertEquals(true, o_isNull(3));
 		}
 
 		public function testOIsInt() {
@@ -136,11 +136,11 @@
 				->expects($this->once())
 				->method('isInt')
 				->with(3)
-				->willReturn(7);
+				->willReturn(true);
 
 			Obj::mock($mock);
 
-			$this->assertEquals(7, o_isInt(3));
+			$this->assertEquals(true, o_isInt(3));
 		}
 
 		public function testOIsFloat() {
@@ -151,11 +151,11 @@
 				->expects($this->once())
 				->method('isFloat')
 				->with(3)
-				->willReturn(7);
+				->willReturn(true);
 
 			Obj::mock($mock);
 
-			$this->assertEquals(7, o_isFloat(3));
+			$this->assertEquals(true, o_isFloat(3));
 		}
 
 		public function testOIsBool() {
@@ -166,11 +166,11 @@
 				->expects($this->once())
 				->method('isBool')
 				->with(3)
-				->willReturn(7);
+				->willReturn(true);
 
 			Obj::mock($mock);
 
-			$this->assertEquals(7, o_isBool(3));
+			$this->assertEquals(true, o_isBool(3));
 		}
 
 		public function testOIsString() {
@@ -181,11 +181,11 @@
 				->expects($this->once())
 				->method('isString')
 				->with(3)
-				->willReturn(7);
+				->willReturn(true);
 
 			Obj::mock($mock);
 
-			$this->assertEquals(7, o_isString(3));
+			$this->assertEquals(true, o_isString(3));
 		}
 
 		public function testOAdd() {
@@ -257,11 +257,11 @@
 				->expects($this->once())
 				->method('castFloat')
 				->with(3)
-				->willReturn(7);
+				->willReturn(7.0);
 
 			Obj::mock($mock);
 
-			$this->assertEquals(7, o_castFloat(3));
+			$this->assertEquals(7.0, o_castFloat(3));
 		}
 
 		public function testOCastInt() {
@@ -287,11 +287,11 @@
 				->expects($this->once())
 				->method('castBool')
 				->with(3)
-				->willReturn(7);
+				->willReturn(true);
 
 			Obj::mock($mock);
 
-			$this->assertEquals(7, o_castBool(3));
+			$this->assertEquals(true, o_castBool(3));
 		}
 
 		public function testOCastString() {
@@ -302,11 +302,11 @@
 				->expects($this->once())
 				->method('castString')
 				->with(3)
-				->willReturn(7);
+				->willReturn('a');
 
 			Obj::mock($mock);
 
-			$this->assertEquals(7, o_castString(3));
+			$this->assertEquals('a', o_castString(3));
 		}
 
 		public function testOComparePipe() {
